@@ -109,7 +109,7 @@ public class Implicant {
         String raw = Integer.toBinaryString(minterms[0]);
         String formattedString = String.format("%0" + NLITERAL + "d", new BigInteger(raw));
         char charArray[] = formattedString.toCharArray();
-        System.out.printf("\n%s", new String(charArray));
+        //System.out.printf("\n%s", new String(charArray));
         int xorValue;
         for (int i = 1; i < minterms.length; i++) {
             xorValue = ~(minterms[i] ^ minterms[i - 1]);
@@ -120,12 +120,14 @@ public class Implicant {
                     charArray[NLITERAL - bitPosition - 1] = '-';
                 }
             }
-            System.out.printf("\n%s", new String(charArray));
+            //System.out.printf("\n%s", new String(charArray));
         }
-        this.binaryString = new String(charArray);
-        //return binaryString;
+        this.binaryString = new String(charArray);        
     }
-
+    /**
+     * The function returns A'BD' for binary String 01-0 and so on
+     * @return 
+     */
     public String getExpressionString() {
         char[] expressionWord = binaryString.toCharArray();
         String str = "";
@@ -149,32 +151,42 @@ public class Implicant {
     }
 
     public String paddedStringNumber(int num) {
-        String binString = Integer.toBinaryString(num);
-        //String answer1 = Integer.toBinaryString(x);
+        String binString = Integer.toBinaryString(num);        
         int paddingcount = NLITERAL - binString.length();
         //StringUtils.leftPad(answer1);
         String formattedString = String.format("%0" + paddingcount + "d%s", 0, binString);
         return formattedString;
     }
-
-    // Check if the two prime impicant are same equal
+     
+    /** Check if the two prime impicant are same equal   
+     * @param implicant2
+     * @return 
+     */
     public boolean isEqual(Implicant implicant2) {
         return Arrays.equals(this.minterms, implicant2.minterms);
     }
 
+    /** 
+     * Return the String equivalent of the class representation
+     * @return 
+     */
     @Override
     public String toString() {
         return String.format("%s | %s | %3d | %5s",
                 Arrays.toString(minterms), binaryString, bitCount, isChecked);
     }
-
+    /**
+     * Create the higher order implicant
+     * Ex. Combine [0,2] 00-0 with [8,10] 10-1 to give [0,2,8,10] -0-0 for 4 variable case
+     * @param implicant2
+     * @return 
+     */
     public Implicant combine(Implicant implicant2) {
         // Combine two minterms
         int x[] = new int[this.minterms.length + implicant2.minterms.length];
         System.arraycopy(this.minterms, 0, x, 0, this.minterms.length);
         System.arraycopy(implicant2.minterms, 0, x, this.minterms.length, implicant2.minterms.length);
-        // Combine the two binaryString
-        //String bString = new String (this.binaryString);
+        // Combine the two binaryString        
         char[] newWord = binaryString.toCharArray();
         int charPosition = posSingleCharChange(implicant2);
         if (charPosition != -1) {
@@ -188,9 +200,10 @@ public class Implicant {
         Implicant bigImplicant = new Implicant(x, newBinaryString);
         return bigImplicant;
     }
-    /* The characer position at which two string differ.
-     Ex1. 00-1 and 10-1 differ at position 0 and returns 0
-     Ex2: 01-0 and 10-0 differs at two position, so returns (-1)
+    /**
+     * The character position at which two string differ.
+     * Ex1. 00-1 and 10-1 differ at position 0 and returns 0
+     * Ex2: 01-0 and 10-0 differs at two position, so returns (-1)
      */
 
     public int posSingleCharChange(Implicant imp2) {

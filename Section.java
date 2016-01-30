@@ -5,9 +5,9 @@
  */
 package sugan;
 import java.util.ArrayList;
-//import java.util.Iterator;
-import static sugan.MainJFrame.NLITERAL;
-//import java.util.Arrays;
+
+//import static sugan.MainJFrame.NLITERAL;
+
 /**
  *
  * @author SuganShakya
@@ -18,7 +18,7 @@ public class Section {
     
     public Section (int nOne){
         this.nOne = nOne;        
-        implicantList = new ArrayList<Implicant>();
+        implicantList = new ArrayList<>();
     }
     public boolean addImplicant(Implicant impl){
         
@@ -30,7 +30,7 @@ public class Section {
         // Implicant already present: no need to add
         for(Implicant x:implicantList) {
             if (x.isEqual(impl)){
-                System.out.printf("\n Implicant Already Present\n", nOne);
+                //System.out.printf("\n Implicant Already Present\n", nOne);
                 return false;
             }
             
@@ -52,10 +52,14 @@ public class Section {
     public int getnOne(){
         return this.nOne;
     }
-    
+    /**
+     * Combine two sections to create a higher sections in next higher table.
+     * @param section1
+     * @return 
+     */
     public Section combine (Section section1){
         Section bigSection = new Section(Math.min(this.nOne,section1.getnOne()));
-        //int isSingleCharChange;
+        
         for(Implicant implicant1:implicantList){
             for(Implicant implicant2:section1.implicantList){
                 if(implicant1.posSingleCharChange(implicant2)!= -1){

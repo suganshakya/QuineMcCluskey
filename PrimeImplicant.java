@@ -33,15 +33,19 @@ public class PrimeImplicant {
     }
     
     public void print(){
+        
+        /*
         System.out.printf("Minterm List:");
         //for()
         for(Entry<Integer, Boolean> mint: mintermList.entrySet()){
             System.out.printf("\n %d %s", mint.getKey(), mint.getValue());
         }
         System.out.println();
-        System.out.println("Prime Implicant: ");
+        */
+        System.out.println("Extra Prime Implicant: ");
         for(Implicant i:primeImp)
             System.out.println(i.toString());
+        
         System.out.println("Final Prime Implicant: ");
         for(Implicant i:finalPrimeImp)
             System.out.println(i.toString());
@@ -55,14 +59,14 @@ public class PrimeImplicant {
     * Add all essential prime Implicant and check these minterms contained by the 
     * essential prime implicant.
     * Essential Prime Implicant: Those prime Implicant in which, 
-    * there is a minterm ( atleast one) which occurs only in this Implicant
+    * there is a minterm ( at least one) which occurs only in this Implicant
     */
     
     public void buildEssentialPrimeImplicant(){    
         //int count = 0;         
         // For loop ticks all the essential prime Implicants
         for(Entry<Integer, Boolean> mint: mintermList.entrySet()){
-            System.out.printf("\n %d minterm inside buildEssential.", mint.getKey());
+            //System.out.printf("\n %d minterm inside buildEssential.", mint.getKey());
             int count = 0; 
             for(Implicant p:primeImp){
                  if(p.contains(mint.getKey())){
@@ -77,7 +81,7 @@ public class PrimeImplicant {
                         if(!finalPrimeImp.contains(x))
                               finalPrimeImp.add(x);
                         
-                        System.out.printf("\n %s added to final Prime Implicant List.",x.toString());
+                        //System.out.printf("\n %s added to final Prime Implicant List.",x.toString());
                     }
                 }
                 
@@ -100,18 +104,18 @@ public class PrimeImplicant {
     
     public void buildFinalPrimeImplicant(){
         buildEssentialPrimeImplicant();
-        System.out.println("After buildEssentialPrimeImplicant.");
+        //System.out.println("After buildEssentialPrimeImplicant.");
         print();
         
         while(mintermList.values().contains(false)){
-            System.out.println("Inside loop to clear all minterms.");
+            //System.out.println("Inside loop to clear all minterms.");
             addBestPrimeImplicant();
         }
         
     }
     
     public void addBestPrimeImplicant(){
-        System.out.println("Inside addBestPrimeImplicant.");
+        //System.out.println("Inside addBestPrimeImplicant.");
         Implicant best = primeImp.get(0);
         int max=0;
         for(Implicant impl:primeImp){

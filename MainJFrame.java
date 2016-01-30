@@ -24,7 +24,7 @@ public class MainJFrame extends javax.swing.JFrame {
     //private ArrayList<Section> sectionList;
     private String finalExpression;
     //private PrimeImplicant p;
-    //private Section[][] sections = new Section[NLITERAL+1][];
+    
     private Section[][] sections;
     /**
      * Creates new form MainJFrame
@@ -112,7 +112,7 @@ public class MainJFrame extends javax.swing.JFrame {
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(jLabel1)
-                .addGap(49, 49, 49)
+                .addGap(18, 18, 18)
                 .addComponent(jLabel3)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(oneTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -126,29 +126,24 @@ public class MainJFrame extends javax.swing.JFrame {
                 .addComponent(jLabel5)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 79, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(28, Short.MAX_VALUE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
     private void computeButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_computeButtonActionPerformed
-        // TODO add your handling code here:
-        
+        // TODO add your handling code here:        
         readValues();
-        
+        System.out.println("\nThe minterm arrays:");
         for( int i = 0; i<mintermArray.length; i++)
-            System.out.printf("\n %d ",mintermArray[i]);
-        System.out.println("That was minterm arrays\n\n");
+            System.out.printf(" %d ",mintermArray[i]);
         
+        System.out.println("\nThe don't care minterm arrays:");
         for( int i = 0; i<dontCareArray.length; i++)
-            System.out.printf("\n %d ",dontCareArray[i]);
-            
-        
-        action();
-        
+            System.out.printf(" %d ",dontCareArray[i]);
                    
-        
+        action();                                 
     }//GEN-LAST:event_computeButtonActionPerformed
 
     private void action(){
@@ -165,11 +160,16 @@ public class MainJFrame extends javax.swing.JFrame {
         /**
          * Create the first table, with section with single Minterm implicants
          */
+        System.out.println ("\nCreating Table #0 and its sections:");      
         for (int i:mintermArray){
+            //Create the one element array whose element equals to its minterm.
             int [] temp = new int []{i};
             Implicant impl = new Implicant(temp);
+            // Allocate the implicant into the section 
+            // categorised by the number of 1 in its binray representation
             sections[0][impl.getBitCount()].addImplicant(impl);            
         }
+        // Don't care Array may or may not be empty.
         if(dontCareArray.length!=0){
             for (int i:dontCareArray){
                 int [] temp = new int []{i};
@@ -177,16 +177,14 @@ public class MainJFrame extends javax.swing.JFrame {
                 sections[0][impl.getBitCount()].addImplicant(impl);            
             }
         }
-                
+        //System.out.println (" Table #0 : \n");      
         for (Section sec:sections[0]){
             sec.print();
         }
         
         // Table #0 has been created
         
-        // Create Higher Tables #1 to Table #NLITERAL
-        System.out.println ("Table #0 Completed. ");
-        
+        // Create Higher Tables #1 to Table #NLITERAL                
         for (int nTable = 1; nTable <NLITERAL+1; nTable++)   // Should be <=
             for (int nSection = 0; nSection < NLITERAL - nTable; nSection ++)
                 sections[nTable][nSection]=new Section(nSection);
@@ -197,8 +195,8 @@ public class MainJFrame extends javax.swing.JFrame {
         for (int nTable = 1; nTable <NLITERAL; nTable++){   // 
             for (int nSection = 0; nSection < NLITERAL - nTable +1; nSection ++){
                 //sections[nTable][nSection]=new Section(nSection);
-                System.out.printf("\n Table # %d, Section # %d: Being Created", 
-                        nTable, nSection);
+                // System.out.printf("\n Table # %d, Section # %d: Being Created", 
+                //        nTable, nSection);
                 if (sections[nTable-1][nSection+1].getnOne()
                         - sections[nTable-1][nSection].getnOne() == 1){
                     sections[nTable][nSection]=
@@ -210,14 +208,18 @@ public class MainJFrame extends javax.swing.JFrame {
             
         }
         
-        System.out.println ("All Section Completed ");
+        System.out.println ("\nCreating Table 0 and its section Completed. ");
+        
+        System.out.println ("Calculation Starts ! \n");
         
         // For the Selection of Minterm, 
         // we user only minterm without dont care minerm.
         PrimeImplicant p = new PrimeImplicant(mintermArray);
         ArrayList<Implicant> checkedImp = new ArrayList<>();
         for (int nTable = 0; nTable <NLITERAL; nTable++){   // Should be <=
+            System.out.printf("Table %d:", nTable);
             for (int nSection = 0; nSection < NLITERAL - nTable +1; nSection ++){
+                //System.out.printf("Section %d: \n", nSection);
                 sections[nTable][nSection].print();
                 checkedImp = sections[nTable][nSection].getCheckedImplicants();
                 if (!checkedImp.isEmpty()){
@@ -247,7 +249,8 @@ public class MainJFrame extends javax.swing.JFrame {
         //System.out.println("That was minterm arrays");
         if(minterms != null){
         //if(!minterms.equals("")){
-            String[] mintermStringArray = minterms.replaceAll("^[,\\s]+", "").split("[,\\s+]+");
+            String[] mintermStringArray = 
+                    minterms.replaceAll("^[,\\s]+", "").split("[,\\s+]+");
             int nMinterm = mintermStringArray.length;
             mintermArray = new int[nMinterm];
             try {
@@ -269,8 +272,9 @@ public class MainJFrame extends javax.swing.JFrame {
         String dontCares = dontCareTextField.getText();   
         
         if (dontCares.length()!=0){
-            System.out.printf("Dont Care array is not empty.");
-            String[] dontCareStringArray = dontCares.replaceAll("^[,\\s]+", "").split("[,\\s+]+");
+            //System.out.printf("Dont Care array is not empty.");
+            String[] dontCareStringArray = 
+                    dontCares.replaceAll("^[,\\s]+", "").split("[,\\s+]+");
             int nDontCare = dontCareStringArray.length;
             dontCareArray = new int[nDontCare];
             try{
@@ -278,7 +282,7 @@ public class MainJFrame extends javax.swing.JFrame {
                     dontCareArray[i]= Integer.parseInt(dontCareStringArray[i]);
                     if(maxValue < dontCareArray[i])
                         maxValue = dontCareArray[i];
-                    System.out.printf("%d\n",dontCareArray[i]);
+                    //System.out.printf("%d\n",dontCareArray[i]);
                 }
             } catch (NumberFormatException exp) {
                 JOptionPane.showMessageDialog(this, "Don't Care Array Empty! OR, Enter an integer.","Info.",JOptionPane.PLAIN_MESSAGE) ;
@@ -290,8 +294,7 @@ public class MainJFrame extends javax.swing.JFrame {
             System.out.printf("Dont Care array is empty.");
             dontCareArray=new int []{};
         }
-        
-        
+                
         /**
          * NLITERAL represents the number of bits the expression will have
          * It depends on the value of maximum minterm
