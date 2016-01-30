@@ -305,6 +305,8 @@ public class MainJFrame extends javax.swing.JFrame {
     }
     
     private int findExponent(int x){
+        if(x==0)
+        	return 1;
         int i; 
 		for (i = 0; x >= Math.pow(2,i); ++i)
             ;
